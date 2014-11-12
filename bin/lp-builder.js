@@ -55,14 +55,18 @@ function addLangpackManifest(resultPath, locale, apps) {
 
 program
   .version('0.0.1')
-  .usage('[options] locale-path result-path')
+  .usage('[options] locale-path')
   .option('-g, --gaia <dir>', 'Gaia dir')
   .option('-l, --locale <locale>', 'Locale')
   .parse(process.argv);
 
 var localePath = program.args[0];
-var resultPath = program.args[1];
+var resultPath = './out/';
 var gaiaPath = program.gaia;
 var locale = program.locale;
 
+if (!locale || !gaiaPath || program.args.length !== 1) {
+  console.log('Example: ./bin/lp-builder.js --gaia /path/to/gaia --locale ab-CD /path/to/gaia-l10n/ab-CD');
+  return;
+}
 buildLangpack(gaiaPath, localePath, resultPath, locale);
