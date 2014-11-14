@@ -17,14 +17,14 @@ function buildLangpack(gaiaPath, localePath, resultPath, locale) {
   var apps = utils.getDirs(path.join(gaiaPath, 'apps'));
   //var apps = ['settings'];
 
-  addLangpackManifest(resultPath, locale, apps);
+  addLangpackManifest(resultPath, [locale], apps);
 
   apps.forEach(function(app) {
     var appPath = path.join(gaiaPath, locale, 'apps', app);
     lpBuilder.getResourcesFromHTMLFiles(gaiaPath,
       path.join(gaiaPath, 'apps', app))
       .then(function(resList) {
-        lpBuilder.copyAppData(localePath, path.join(resultPath, locale), app, resList);
+        lpBuilder.copyAppData(localePath, resultPath, locale, app, resList);
       }
     );
   });
@@ -32,24 +32,27 @@ function buildLangpack(gaiaPath, localePath, resultPath, locale) {
 
 // Lib functions
 
-function addLangpackManifest(resultPath, locale, apps) {
+function addLangpackManifest(resultPath, locales, apps) {
   var manifest = {};
 
-  manifest.target = {
-    app: 'Gaia',
-    version: '2.2'
-  };
-  manifest.version = '1';
   manifest.role = 'langpack';
+  manifest.version = '1.0.0';
+  manifest['languages-target'] = {
+    'app://*.gaiamobile.org/manifest.webapp': '2.2'
+  };
   manifest['languages-provided'] = {};
 
-  apps.forEach(function(app) {
-    var appID = 'app://' + app + '.gaiamobile.org/manifest.webapp';
-    var langs = {};
-    langs[locale] = '/' + locale + '/apps/' + app;
-    manifest['languages-provided'][appID] = langs;
+  locales.forEach(function(locale) {
+    var origins = {};
+    apps.forEach(function(app) {
+      var appID = 'app://' + app + '.gaiamobile.org/manifest.webapp';
+      origins[appID] = '/' + locale + '/apps/' + app;
+    });
+    manifest['languages-provided'][locale] = {
+      version: '2014-11-14-09:59',
+      origins: origins
+    };
   });
-
   utils.writeFile(path.join(resultPath, 'manifest.webapp'), JSON.stringify(manifest, false, 2));
 }
 
