@@ -32,6 +32,24 @@ function buildLangpack(gaiaPath, localePath, resultPath, locale) {
 
 // Lib functions
 
+function getTimestamp(date) {
+  if (!date) {
+    date = new Date();
+  }
+
+  var pieces = [
+    date.getFullYear(),
+    date.getMonth() + 1,
+    date.getDate(),
+    date.getHours(),
+    date.getMinutes()
+  ];
+
+  return pieces.map(function(piece) {
+    return piece < 10 ? '0' + piece.toString() : piece.toString();
+  }).join('');
+}
+
 function addLangpackManifest(resultPath, locales, apps) {
   var manifest = {};
 
@@ -49,7 +67,7 @@ function addLangpackManifest(resultPath, locales, apps) {
       origins[appID] = '/' + locale + '/apps/' + app;
     });
     manifest['languages-provided'][locale] = {
-      version: '2014-11-14-09:59',
+      version: getTimestamp(),
       origins: origins
     };
   });
