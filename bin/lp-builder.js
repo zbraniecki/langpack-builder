@@ -16,7 +16,7 @@ function buildLangpack(gaiaPath, localePath, resultPath,
   fs.mkdirSync(path.join(resultPath, locale));
   fs.mkdirSync(path.join(resultPath, locale, 'apps'));
   var apps = utils.getDirs(path.join(gaiaPath, 'apps'));
-  //var apps = ['settings'];
+  var apps = ['wappush'];
 
   addLangpackManifest(resultPath, [locale], apps, releaseUrl, name);
 
@@ -25,7 +25,9 @@ function buildLangpack(gaiaPath, localePath, resultPath,
     lpBuilder.getResourcesFromHTMLFiles(gaiaPath,
       path.join(gaiaPath, 'apps', app))
       .then(function(resList) {
-        lpBuilder.copyAppData(localePath, resultPath, locale, app, resList);
+        //lpBuilder.copyAppData(localePath, resultPath, locale, app, resList);
+
+        lpBuilder.buildOptimizedAST(gaiaPath, resultPath, locale, app, resList);
       }
     );
   });
