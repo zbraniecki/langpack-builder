@@ -7,87 +7,40 @@ var fs = require('fs');
 var path = require('path');
 
 var utils = require('../lib/utils');
-var lpBuilder = require('../lib/lp-builder');
+var LangpackBuilder = require('../lib/lp-builder').LangpackBuilder;
 
 var config = {
   GAIA_DEFAULT_LOCALE: 'en-US',
+  GAIA_APP_TARGET: 'production',
   MOZILLA_OFFICIAL: 1,
-  DEVICE_TYPE: 'phone'
+  GAIA_DEVICE_TYPE: 'phone',
+  GAIA_DOMAIN: 'gaiamobile.org',
+  GAIA_DIR: null,
+  GAIA_APPS: null,
+
+  LP_RESULT_DIR: null,
+  LP_RELEASE_URL: null,
+  LP_NAME: null,
+
+  LOCALES: null,
+  LOCALE_BASEDIR: null,
 };
 
-function buildLangpack(gaiaPath, localePath, resultPath,
+
+function buildLangpack(gaiaDir, localePath, resultPath,
     locale, releaseUrl, name) {
-  utils.cleanDir(resultPath);
 
-  fs.mkdirSync(path.join(resultPath, locale));
-  fs.mkdirSync(path.join(resultPath, locale, 'apps'));
-  var apps = utils.getDirs(path.join(gaiaPath, 'apps'));
-  //var apps = ['settings'];
+  config.GAIA_DIR = gaiaDir;
+  config.LP_RESULT_DIR = resultPath;
+  config.LOCALES = [locale];
+  config.LP_RELEASE_URL = releaseUrl;
+  config.LP_NAME = name;
+  config.LOCALE_BASEDIR = localePath;
 
-  addLangpackManifest(resultPath, [locale], apps, releaseUrl, name);
-
-  apps.forEach(function(app) {
-    var appPath = path.join(gaiaPath, locale, 'apps', app);
-    lpBuilder.getResourcesFromHTMLFiles(gaiaPath,
-      path.join(gaiaPath, 'apps', app))
-      .then(function(resList) {
-        if (resList.size) {
-          lpBuilder.copyAppData(localePath, resultPath, locale, app, resList);
-
-          lpBuilder.buildOptimizedAST(gaiaPath, localePath, resultPath, locale, app, resList);
-        }
-      }
-    );
+  var lpBuilder = new LangpackBuilder(config);
+  lpBuilder.init().then(function() {
+    lpBuilder.build();
   });
-}
-
-// Lib functions
-
-function getTimestamp(date) {
-  if (!date) {
-    date = new Date();
-  }
-
-  var pieces = [
-    date.getFullYear(),
-    date.getMonth() + 1,
-    date.getDate(),
-    date.getHours(),
-    date.getMinutes()
-  ];
-
-  return pieces.map(function(piece) {
-    return piece < 10 ? '0' + piece.toString() : piece.toString();
-  }).join('');
-}
-
-function addLangpackManifest(resultPath, locales, apps, releaseUrl, name) {
-  var manifest = {};
-
-  manifest.name = name;
-  manifest.role = 'langpack';
-  manifest.version = '1.0.0';
-  manifest.developer = {
-    'name': 'Mozilla',
-    'url': releaseUrl
-  };
-  manifest['languages-target'] = {
-    'app://*.gaiamobile.org/manifest.webapp': '2.2'
-  };
-  manifest['languages-provided'] = {};
-
-  locales.forEach(function(locale) {
-    var origins = {};
-    apps.forEach(function(app) {
-      var appID = 'app://' + app + '.gaiamobile.org/manifest.webapp';
-      origins[appID] = '/' + locale + '/apps/' + app;
-    });
-    manifest['languages-provided'][locale] = {
-      version: parseInt(getTimestamp()),
-      apps: origins
-    };
-  });
-  utils.writeFile(path.join(resultPath, 'manifest.webapp'), JSON.stringify(manifest, false, 2));
 }
 
 program
@@ -103,13 +56,13 @@ program
 
 var localePath = program.args[0];
 var resultPath = './out/';
-var gaiaPath = program.gaia;
+var gaiaDir = program.gaia;
 var locale = program.locale;
 var releaseUrl = program.releaseUrl;
 var name = program.name;
 
-if (!locale || !gaiaPath || program.args.length !== 1) {
+if (!locale || !gaiaDir || program.args.length !== 1) {
   console.log('Example: ./bin/lp-builder.js --gaia /path/to/gaia --locale ab-CD /path/to/gaia-l10n/ab-CD');
   return;
 }
-buildLangpack(gaiaPath, localePath, resultPath, locale, releaseUrl, name);
+buildLangpack(gaiaDir, localePath, resultPath, locale, releaseUrl, name);
