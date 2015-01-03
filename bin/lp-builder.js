@@ -9,6 +9,12 @@ var path = require('path');
 var utils = require('../lib/utils');
 var lpBuilder = require('../lib/lp-builder');
 
+var config = {
+  GAIA_DEFAULT_LOCALE: 'en-US',
+  MOZILLA_OFFICIAL: 1,
+  DEVICE_TYPE: 'phone'
+};
+
 function buildLangpack(gaiaPath, localePath, resultPath,
     locale, releaseUrl, name) {
   utils.cleanDir(resultPath);
@@ -16,7 +22,7 @@ function buildLangpack(gaiaPath, localePath, resultPath,
   fs.mkdirSync(path.join(resultPath, locale));
   fs.mkdirSync(path.join(resultPath, locale, 'apps'));
   var apps = utils.getDirs(path.join(gaiaPath, 'apps'));
-  var apps = ['wappush'];
+  //var apps = ['system'];
 
   addLangpackManifest(resultPath, [locale], apps, releaseUrl, name);
 
@@ -25,9 +31,11 @@ function buildLangpack(gaiaPath, localePath, resultPath,
     lpBuilder.getResourcesFromHTMLFiles(gaiaPath,
       path.join(gaiaPath, 'apps', app))
       .then(function(resList) {
-        //lpBuilder.copyAppData(localePath, resultPath, locale, app, resList);
+        if (resList.size) {
+          //lpBuilder.copyAppData(localePath, resultPath, locale, app, resList);
 
-        lpBuilder.buildOptimizedAST(gaiaPath, resultPath, locale, app, resList);
+          lpBuilder.buildOptimizedAST(gaiaPath, resultPath, locale, app, resList);
+        }
       }
     );
   });
