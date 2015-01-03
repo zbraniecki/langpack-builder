@@ -22,7 +22,7 @@ function buildLangpack(gaiaPath, localePath, resultPath,
   fs.mkdirSync(path.join(resultPath, locale));
   fs.mkdirSync(path.join(resultPath, locale, 'apps'));
   var apps = utils.getDirs(path.join(gaiaPath, 'apps'));
-  //var apps = ['system'];
+  //var apps = ['settings'];
 
   addLangpackManifest(resultPath, [locale], apps, releaseUrl, name);
 
@@ -32,9 +32,9 @@ function buildLangpack(gaiaPath, localePath, resultPath,
       path.join(gaiaPath, 'apps', app))
       .then(function(resList) {
         if (resList.size) {
-          //lpBuilder.copyAppData(localePath, resultPath, locale, app, resList);
+          lpBuilder.copyAppData(localePath, resultPath, locale, app, resList);
 
-          lpBuilder.buildOptimizedAST(gaiaPath, resultPath, locale, app, resList);
+          lpBuilder.buildOptimizedAST(gaiaPath, localePath, resultPath, locale, app, resList);
         }
       }
     );
