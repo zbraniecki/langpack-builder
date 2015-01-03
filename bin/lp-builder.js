@@ -3,10 +3,7 @@
 'use strict';
 
 var program = require('commander');
-var fs = require('fs');
-var path = require('path');
 
-var utils = require('../lib/utils');
 var LangpackBuilder = require('../lib/lp-builder').LangpackBuilder;
 
 var config = {
