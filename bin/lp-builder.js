@@ -16,7 +16,6 @@ var config = {
   GAIA_APPS: null,
 
   LP_RESULT_DIR: null,
-  LP_RELEASE_URL: null,
   LP_NAME: null,
 
   LOCALES: null,
@@ -30,7 +29,6 @@ function buildLangpack(gaiaDir, localePath, resultPath,
   config.GAIA_DIR = gaiaDir;
   config.LP_RESULT_DIR = resultPath;
   config.LOCALES = [locale];
-  config.LP_RELEASE_URL = releaseUrl;
   config.LP_NAME = name;
   config.LOCALE_BASEDIR = localePath;
 
@@ -45,7 +43,6 @@ program
   .usage('[options] locale-path')
   .option('-g, --gaia <dir>', 'Gaia dir')
   .option('-l, --locale <locale>', 'Locale')
-  .option('-r, --release-url <url>', 'URL used to distribute the package')
   .option('-j, --json', 'pack json files')
   .option('-s, --source', 'pack source files')
   .option('-n, --name <string>', 'langpack name')
@@ -55,11 +52,10 @@ var localePath = program.args[0];
 var resultPath = './out/';
 var gaiaDir = program.gaia;
 var locale = program.locale;
-var releaseUrl = program.releaseUrl;
 var name = program.name;
 
 if (!locale || !gaiaDir || program.args.length !== 1) {
   console.log('Example: ./bin/lp-builder.js --gaia /path/to/gaia --locale ab-CD /path/to/gaia-l10n/ab-CD');
   return;
 }
-buildLangpack(gaiaDir, localePath, resultPath, locale, releaseUrl, name);
+buildLangpack(gaiaDir, localePath, resultPath, locale, name);
