@@ -17,6 +17,7 @@ var config = {
 
   LP_RESULT_DIR: null,
   LP_NAME: null,
+  LP_APPS: null,
 
   LOCALES: null,
   LOCALE_BASEDIR: null,
@@ -24,7 +25,7 @@ var config = {
 
 
 function buildLangpack(gaiaDir, localePath, resultPath,
-    locale, releaseUrl, name) {
+    locale, name) {
 
   config.GAIA_DIR = gaiaDir;
   config.LP_RESULT_DIR = resultPath;
