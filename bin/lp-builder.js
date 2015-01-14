@@ -46,17 +46,15 @@ program
   .option('-l, --locale <locale>', 'Locale')
   .option('-j, --json', 'pack json files')
   .option('-s, --source', 'pack source files')
-  .option('-n, --name <string>', 'langpack name')
   .parse(process.argv);
 
 var localePath = program.args[0];
 var resultPath = './out/';
 var gaiaDir = program.gaia;
 var locale = program.locale;
-var name = program.name;
 
 if (!locale || !gaiaDir || program.args.length !== 1) {
   console.log('Example: ./bin/lp-builder.js --gaia /path/to/gaia --locale ab-CD /path/to/gaia-l10n/ab-CD');
   return;
 }
-buildLangpack(gaiaDir, localePath, resultPath, locale, name);
+buildLangpack(gaiaDir, localePath, resultPath, locale);
