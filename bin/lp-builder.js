@@ -12,10 +12,12 @@ var config = {
   MOZILLA_OFFICIAL: 1,
   GAIA_DEVICE_TYPE: 'phone',
   GAIA_DOMAIN: 'gaiamobile.org',
+  GAIA_VERSION: '2.2',
   GAIA_DIR: null,
   GAIA_APPS: null,
 
   LP_RESULT_DIR: null,
+  LP_VERSION: '1.0.0',
   LP_APPS: null,
   LP_TASKS: ['copy' ,'optimize'],
 
@@ -45,10 +47,11 @@ program
   .option('-l, --locale <locale>', 'Locale')
   .option('-j, --json', 'pack json files')
   .option('-s, --source', 'pack source files')
+  .option('-t, --target <dir>', 'target directory')
   .parse(process.argv);
 
 var localePath = program.args[0];
-var resultPath = './out/';
+var resultPath = program.target || './out/';
 var gaiaDir = program.gaia;
 var locale = program.locale;
 
