@@ -1,7 +1,9 @@
 'use strict';
 
 var exec = require('child_process').exec;
-fs = require('fs');
+var fs = require('fs');
+var Promise = require('promise');
+var deepEqual = require('deep-equal');
 
 /* global suite, test */
 
@@ -18,19 +20,33 @@ function compareManifests(path1, path2) {
 
   man1['languages-provided'].fr.version = null;
   man2['languages-provided'].fr.version = null;
-  return assert.deepEqual(man1, man2);
+  return deepEqual(man1, man2);
+}
+
+function compare() {
+  return new Promise(function(resolve, reject) {
+    exec('diff -uNr ./tests/out/fr ./tests/fixture/fr', function (error, stdout, stderr) {
+      if (stdout.length === 0) {
+        if (compareManifests('./tests/out/manifest.webapp', './tests/fixture/manifest.webapp')) {
+          resolve();
+        } else {
+          reject('manifest mismatch');
+        }
+      } else {
+        reject(stdout);
+      }
+    });
+  });
 }
 
 suite('Comparison modes', function() {
   test('compare l10n dir to source', function(done) {
-    exec('diff -uNr ./tests/out/fr ./tests/fixture/fr', function (error, stdout, stderr) {
-      if (stdout.length === 0) {
-        compareManifests('./tests/out/manifest.webapp', './tests/fixture/manifest.webapp');
-        done();
-      } else {
-        throw stdout;
-      }
+    compare().then(function() {
+      done();
+    }).catch(function(e) {
+      done(new Error(e));
     });
+
   });
 });
 
