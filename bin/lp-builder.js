@@ -3,6 +3,8 @@
 'use strict';
 
 var program = require('commander');
+var utils = require('../lib/utils');
+var path = require('path');
 
 var LangpackBuilder = require('../lib/lp-builder').LangpackBuilder;
 
@@ -12,7 +14,7 @@ var config = {
   MOZILLA_OFFICIAL: 1,
   GAIA_DEVICE_TYPE: 'phone',
   GAIA_DOMAIN: 'gaiamobile.org',
-  GAIA_VERSION: '2.2',
+  GAIA_VERSION: null,
   GAIA_DIR: null,
   GAIA_APPS: null,
 
@@ -25,6 +27,15 @@ var config = {
   LOCALE_BASEDIR: null,
 };
 
+function getGaiaVersion(gaiaDir) {
+  var settingsPath = path.join(gaiaDir, 'build', 'config',
+    'common-settings.json');
+
+  return utils.getFileContent(settingsPath).then(function(source) {
+    var settings = JSON.parse(source);
+    return settings['moz.b2g.version'];
+  });
+}
 
 function buildLangpack(gaiaDir, localePath, resultPath, locale, tasks) {
 
@@ -33,10 +44,13 @@ function buildLangpack(gaiaDir, localePath, resultPath, locale, tasks) {
   config.LOCALES = [locale];
   config.LOCALE_BASEDIR = localePath;
   config.LP_TASKS = tasks;
+  getGaiaVersion(gaiaDir).then(function(gaiaVersion) {
+    config.GAIA_VERSION = gaiaVersion;
 
-  var lpBuilder = new LangpackBuilder(config);
-  lpBuilder.init().then(function() {
-    lpBuilder.build();
+    var lpBuilder = new LangpackBuilder(config);
+    lpBuilder.init().then(function() {
+      lpBuilder.build();
+    });
   });
 }
 
