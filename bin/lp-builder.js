@@ -19,7 +19,7 @@ var config = {
   GAIA_APPS: null,
 
   LP_RESULT_DIR: null,
-  LP_VERSION: '1.0.0',
+  LP_VERSION: null,
   LP_APPS: null,
   LP_TASKS: ['copy' ,'optimize'],
 
@@ -37,13 +37,14 @@ function getGaiaVersion(gaiaDir) {
   });
 }
 
-function buildLangpack(gaiaDir, localePath, resultPath, locale, tasks) {
+function buildLangpack(gaiaDir, localePath, resultPath, locale, tasks, version) {
 
   config.GAIA_DIR = gaiaDir;
   config.LP_RESULT_DIR = resultPath;
   config.LOCALES = [locale];
   config.LOCALE_BASEDIR = localePath;
   config.LP_TASKS = tasks;
+  config.LP_VERSION = version;
   getGaiaVersion(gaiaDir).then(function(gaiaVersion) {
     config.GAIA_VERSION = gaiaVersion;
 
@@ -62,12 +63,14 @@ program
   .option('-j, --json', 'pack json files')
   .option('-s, --source', 'pack source files')
   .option('-t, --target <dir>', 'target directory')
+  .option('--lp_version <ver>', 'langpack version')
   .parse(process.argv);
 
 var localePath = program.args[0];
 var resultPath = program.target || './out/';
 var gaiaDir = program.gaia;
 var locale = program.locale;
+var version = program.lp_version || '1.0.0';
 
 var tasks = [];
 if (!program.source && !program.json) {
@@ -85,4 +88,4 @@ if (!locale || !gaiaDir || program.args.length !== 1) {
   console.log('Example: ./bin/lp-builder.js --gaia /path/to/gaia --locale ab-CD /path/to/gaia-l10n/ab-CD');
   return;
 }
-buildLangpack(gaiaDir, localePath, resultPath, locale, tasks);
+buildLangpack(gaiaDir, localePath, resultPath, locale, tasks, version);
