@@ -1,15 +1,15 @@
 'use strict';
+/* global suite, test */
 
 var exec = require('child_process').exec;
 var fs = require('fs');
+var path = require('path');
 var Promise = require('promise');
 var deepEqual = require('deep-equal');
-
-/* global suite, test */
-
-var fs = require('fs');
-var path = require('path');
 var assert = require('assert');
+
+var LangpackBuilder = require('../lib/lp-builder').LangpackBuilder;
+
 
 function compareManifests(path1, path2) {
   var source1 = fs.readFileSync(path1, "utf8");
@@ -21,6 +21,58 @@ function compareManifests(path1, path2) {
   man1['languages-provided'].fr.version = null;
   man2['languages-provided'].fr.version = null;
   return deepEqual(man1, man2);
+}
+
+var rmdir = function(dir) {
+	var list = fs.readdirSync(dir);
+	for(var i = 0; i < list.length; i++) {
+		var filename = path.join(dir, list[i]);
+		var stat = fs.statSync(filename);
+		
+		if(filename == "." || filename == "..") {
+			// pass these files
+		} else if(stat.isDirectory()) {
+			// rmdir recursively
+			rmdir(filename);
+		} else {
+			// rm fiilename
+			fs.unlinkSync(filename);
+		}
+	}
+	fs.rmdirSync(dir);
+};
+
+function cleanup() {
+  if (fs.exists('./tests/out/fr')) {
+    rmdir('./tests/out/fr');
+  }
+
+  if (fs.exists('./tests/out/manifest.webapp')) {
+    fs.unlinkSync('./tests/out/manifest.webapp');
+  }
+}
+
+function build() {
+  var config = {
+    GAIA_DEFAULT_LOCALE: 'en-US',
+    GAIA_APP_TARGET: 'production',
+    MOZILLA_OFFICIAL: 1,
+    GAIA_DEVICE_TYPE: 'phone',
+    GAIA_DOMAIN: 'gaiamobile.org',
+    GAIA_VERSION: null,
+    GAIA_DIR: './tests/tmp/gaia',
+    GAIA_APPS: null,
+
+    LP_RESULT_DIR: './tests/out',
+    LP_VERSION: '1.0.0',
+    LP_APPS: null,
+    LP_TASKS: ['copy' ,'optimize'],
+
+    LOCALES: ['fr'],
+    LOCALE_BASEDIR: './tests/tmp/gaia-l10n/fr',
+  };
+  var lpBuilder = new LangpackBuilder(config);
+  return lpBuilder.init().then(lpBuilder.build.bind(lpBuilder));
 }
 
 function compare() {
@@ -39,9 +91,10 @@ function compare() {
   });
 }
 
-suite('Comparison modes', function() {
-  test('compare l10n dir to source', function(done) {
-    compare().then(function() {
+suite('Lp builder', function() {
+  test('build french locale identical to fixture', function(done) {
+    cleanup();
+    build().then(compare).then(function() {
       done();
     }).catch(function(e) {
       done(new Error(e));
@@ -49,4 +102,3 @@ suite('Comparison modes', function() {
 
   });
 });
-

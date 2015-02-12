@@ -37,8 +37,9 @@ function buildLangpack(gaiaDir, localePath, resultPath, locale, tasks, version) 
   config.LP_VERSION = version;
 
   var lpBuilder = new LangpackBuilder(config);
-  lpBuilder.init().then(function() {
-    lpBuilder.build();
+  lpBuilder.init().then(
+    lpBuilder.build.bind(lpBuilder)).then(function() {
+      console.log('--- complete');
   });
 }
 

@@ -12,11 +12,11 @@
   },
   "languages-provided": {
     "fr": {
-      "version": 201502071116,
+      "version": 201502111547,
       "name": "French",
       "apps": {
-        "app://bookmark.gaiamobile.org/manifest.webapp": "/fr/apps/bookmark",
         "app://bluetooth.gaiamobile.org/manifest.webapp": "/fr/apps/bluetooth",
+        "app://bookmark.gaiamobile.org/manifest.webapp": "/fr/apps/bookmark",
         "app://calendar.gaiamobile.org/manifest.webapp": "/fr/apps/calendar",
         "app://callscreen.gaiamobile.org/manifest.webapp": "/fr/apps/callscreen",
         "app://camera.gaiamobile.org/manifest.webapp": "/fr/apps/camera",
@@ -32,8 +32,8 @@
         "app://music.gaiamobile.org/manifest.webapp": "/fr/apps/music",
         "app://network-alerts.gaiamobile.org/manifest.webapp": "/fr/apps/network-alerts",
         "app://ringtones.gaiamobile.org/manifest.webapp": "/fr/apps/ringtones",
-        "app://keyboard.gaiamobile.org/manifest.webapp": "/fr/apps/keyboard",
         "app://search.gaiamobile.org/manifest.webapp": "/fr/apps/search",
+        "app://keyboard.gaiamobile.org/manifest.webapp": "/fr/apps/keyboard",
         "app://sms.gaiamobile.org/manifest.webapp": "/fr/apps/sms",
         "app://system.gaiamobile.org/manifest.webapp": "/fr/apps/system",
         "app://verticalhome.gaiamobile.org/manifest.webapp": "/fr/apps/verticalhome",
