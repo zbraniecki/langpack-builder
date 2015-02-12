@@ -97,11 +97,16 @@ var rmdir = function(dir) {
 };
 
 function cleanup() {
-  if (fs.exists('./tests/out/fr')) {
+  if (!fs.existsSync('./tests/out')) {
+    fs.mkdirSync('./tests/out');
+    return;
+  }
+
+  if (fs.existsSync('./tests/out/fr')) {
     rmdir('./tests/out/fr');
   }
 
-  if (fs.exists('./tests/out/manifest.webapp')) {
+  if (fs.existsSync('./tests/out/manifest.webapp')) {
     fs.unlinkSync('./tests/out/manifest.webapp');
   }
 }
