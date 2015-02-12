@@ -3,7 +3,7 @@
 'use strict';
 
 var program = require('commander');
-var utils = require('../lib/utils');
+var lpUtils = require('../lib/lp-builder/utils');
 var path = require('path');
 
 var LangpackBuilder = require('../lib/lp-builder').LangpackBuilder;
@@ -27,16 +27,6 @@ var config = {
   LOCALE_BASEDIR: null,
 };
 
-function getGaiaVersion(gaiaDir) {
-  var settingsPath = path.join(gaiaDir, 'build', 'config',
-    'common-settings.json');
-
-  return utils.getFileContent(settingsPath).then(function(source) {
-    var settings = JSON.parse(source);
-    return settings['moz.b2g.version'];
-  });
-}
-
 function buildLangpack(gaiaDir, localePath, resultPath, locale, tasks, version) {
 
   config.GAIA_DIR = gaiaDir;
@@ -45,13 +35,10 @@ function buildLangpack(gaiaDir, localePath, resultPath, locale, tasks, version) 
   config.LOCALE_BASEDIR = localePath;
   config.LP_TASKS = tasks;
   config.LP_VERSION = version;
-  getGaiaVersion(gaiaDir).then(function(gaiaVersion) {
-    config.GAIA_VERSION = gaiaVersion;
 
-    var lpBuilder = new LangpackBuilder(config);
-    lpBuilder.init().then(function() {
-      lpBuilder.build();
-    });
+  var lpBuilder = new LangpackBuilder(config);
+  lpBuilder.init().then(function() {
+    lpBuilder.build();
   });
 }
 
