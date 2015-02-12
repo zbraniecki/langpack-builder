@@ -10,9 +10,28 @@ var assert = require('assert');
 
 var LangpackBuilder = require('../lib/lp-builder').LangpackBuilder;
 
+var config = {
+  GAIA_DEFAULT_LOCALE: 'en-US',
+  GAIA_APP_TARGET: 'production',
+  MOZILLA_OFFICIAL: 1,
+  GAIA_DEVICE_TYPE: 'phone',
+  GAIA_DOMAIN: 'gaiamobile.org',
+  GAIA_VERSION: null,
+  GAIA_DIR: './tests/tmp/gaia',
+  GAIA_APPS: null,
+
+  LP_RESULT_DIR: './tests/out',
+  LP_VERSION: '1.0.0',
+  LP_APPS: null,
+  LP_TASKS: ['copy' ,'optimize'],
+
+  LOCALES: ['fr'],
+  LOCALE_BASEDIR: './tests/tmp/gaia-l10n/fr',
+};
+
 function getGaiaRevision() {
   return new Promise(function(resolve, reject) {
-    exec('cd ./tests/tmp/gaia && git rev-parse HEAD', function (error, stdout, stderr) {
+    exec('cd ' + config.GAIA_DIR + ' && git rev-parse HEAD', function (error, stdout, stderr) {
       var gaia_rev = stdout.trim();
       resolve(gaia_rev);
     });
@@ -21,7 +40,7 @@ function getGaiaRevision() {
 
 function getLocaleRevision() {
   return new Promise(function(resolve, reject) {
-    exec('cd ./tests/tmp/gaia-l10n/fr && hg id -i', function (error, stdout, stderr) {
+    exec('cd ' + config.LOCALE_BASEDIR + ' && hg id -i', function (error, stdout, stderr) {
       var hg_rev = stdout.trim();
       resolve(hg_rev);
     });
@@ -38,10 +57,10 @@ function verifyRevisions() {
 
   return Promise.all(revs).then(function(revs) {
     if (revs[0] !== source['gaia_revision']) {
-      throw new Error("Gaia revision mismatch");
+      throw new Error("Gaia revision mismatch.\n " + config.GAIA_DIR + " should be in revision: " + source['gaia_revision']);
     }
     if (revs[1] !== source['fr_revision']) {
-      throw new Error("Locale revision mismatch");
+      throw new Error("Locale revision mismatch\n " + config.LOCALE_BASEDIR + " should be in revision: " + source['fr_revision']);
     }
   });
 }
@@ -88,24 +107,7 @@ function cleanup() {
 }
 
 function build() {
-  var config = {
-    GAIA_DEFAULT_LOCALE: 'en-US',
-    GAIA_APP_TARGET: 'production',
-    MOZILLA_OFFICIAL: 1,
-    GAIA_DEVICE_TYPE: 'phone',
-    GAIA_DOMAIN: 'gaiamobile.org',
-    GAIA_VERSION: null,
-    GAIA_DIR: './tests/tmp/gaia',
-    GAIA_APPS: null,
 
-    LP_RESULT_DIR: './tests/out',
-    LP_VERSION: '1.0.0',
-    LP_APPS: null,
-    LP_TASKS: ['copy' ,'optimize'],
-
-    LOCALES: ['fr'],
-    LOCALE_BASEDIR: './tests/tmp/gaia-l10n/fr',
-  };
   var lpBuilder = new LangpackBuilder(config);
   return lpBuilder.init().then(lpBuilder.build.bind(lpBuilder));
 }
