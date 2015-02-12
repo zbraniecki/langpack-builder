@@ -10,6 +10,41 @@ var assert = require('assert');
 
 var LangpackBuilder = require('../lib/lp-builder').LangpackBuilder;
 
+function getGaiaRevision() {
+  return new Promise(function(resolve, reject) {
+    exec('cd ./tests/tmp/gaia && git rev-parse HEAD', function (error, stdout, stderr) {
+      var gaia_rev = stdout.trim();
+      resolve(gaia_rev);
+    });
+  });
+}
+
+function getLocaleRevision() {
+  return new Promise(function(resolve, reject) {
+    exec('cd ./tests/tmp/gaia-l10n/fr && hg id -i', function (error, stdout, stderr) {
+      var hg_rev = stdout.trim();
+      resolve(hg_rev);
+    });
+  });
+}
+
+function verifyRevisions() {
+  var source = JSON.parse(fs.readFileSync('./tests/fixture/source.json'));
+
+  var revs = [];
+
+  revs.push(getGaiaRevision());
+  revs.push(getLocaleRevision());
+
+  return Promise.all(revs).then(function(revs) {
+    if (revs[0] !== source['gaia_revision']) {
+      throw new Error("Gaia revision mismatch");
+    }
+    if (revs[1] !== source['fr_revision']) {
+      throw new Error("Locale revision mismatch");
+    }
+  });
+}
 
 function compareManifests(path1, path2) {
   var source1 = fs.readFileSync(path1, "utf8");
@@ -93,12 +128,14 @@ function compare() {
 
 suite('Lp builder', function() {
   test('build french locale identical to fixture', function(done) {
-    cleanup();
-    build().then(compare).then(function() {
+    verifyRevisions()
+      .then(cleanup)
+      .then(build)
+      .then(compare)
+      .then(function() {
       done();
     }).catch(function(e) {
       done(new Error(e));
     });
-
   });
 });
