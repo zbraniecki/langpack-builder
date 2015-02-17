@@ -53,7 +53,7 @@ revision expected by the test fixtures.
     cd gaia-l10n
     hg clone https://hg.mozilla.org/gaia-l10n/fr
     cd fr
-    hg update 08d663e504a9
+    hg update 7ea0828dcc36
 
 You should now be able to run tests by issuing the following command:
 
