@@ -1,6 +1,7 @@
 {
   "name": "French Language Pack",
   "description": "A package providing a French localization of Firefox OS.",
+  "default_locale": "en-US",
   "role": "langpack",
   "version": "1.0.0",
   "developer": {
