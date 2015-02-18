@@ -40,7 +40,7 @@ function buildLangpack(gaiaDir, localePath, resultPath, locale, tasks, version) 
   lpBuilder.init().then(
     lpBuilder.build.bind(lpBuilder)).then(function() {
       console.log('--- complete');
-  });
+    }).catch(console.error.bind(console));
 }
 
 program
@@ -50,8 +50,8 @@ program
   .option('-l, --locale <locale>', 'Locale')
   .option('-j, --json', 'pack json files')
   .option('-s, --source', 'pack source files')
-  .option('-t, --target <dir>', 'target directory')
-  .option('--lp_version <ver>', 'langpack version')
+  .option('-t, --target <dir>', 'target directory [out]')
+  .option('--lp_version <ver>', 'langpack version [1.0.0]')
   .parse(process.argv);
 
 var localePath = program.args[0];

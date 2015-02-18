@@ -1,6 +1,6 @@
 {
   "name": "French Language Pack",
-  "description": "Bla bla bla",
+  "description": "A package providing a French localization of Firefox OS.",
   "role": "langpack",
   "version": "1.0.0",
   "developer": {
@@ -13,7 +13,7 @@
   "languages-provided": {
     "fr": {
       "version": 201502111547,
-      "name": "French",
+      "name": "Français",
       "apps": {
         "app://bluetooth.gaiamobile.org/manifest.webapp": "/fr/apps/bluetooth",
         "app://bookmark.gaiamobile.org/manifest.webapp": "/fr/apps/bookmark",
@@ -49,8 +49,8 @@
   },
   "locales": {
     "fr": {
-      "name": "French Language Pack",
-      "description": "Bla bla bla"
+      "name": "Paquetage linguistique français",
+      "description": "Paquetage assurant la traduction de Firefox OS en français."
     }
   }
 }
