@@ -12,7 +12,7 @@
   },
   "languages-provided": {
     "fr": {
-      "version": 201502111547,
+      "revision": 201502111547,
       "name": "Français",
       "apps": {
         "app://bluetooth.gaiamobile.org/manifest.webapp": "/fr/apps/bluetooth",
