@@ -72,8 +72,8 @@ function compareManifests(path1, path2) {
   var man1 = JSON.parse(source1);
   var man2 = JSON.parse(source2);
 
-  man1['languages-provided'].fr.version = null;
-  man2['languages-provided'].fr.version = null;
+  man1['languages-provided'].fr.revision = null;
+  man2['languages-provided'].fr.revision = null;
   return deepEqual(man1, man2);
 }
 
