@@ -53,5 +53,8 @@
       "name": "Paquetage linguistique français",
       "description": "Paquetage assurant la traduction de Firefox OS en français."
     }
+  },
+  "icons": {
+    "128": "/icon.png"
   }
 }

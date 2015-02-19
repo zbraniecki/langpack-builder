@@ -89,7 +89,7 @@ var rmdir = function(dir) {
 			// rmdir recursively
 			rmdir(filename);
 		} else {
-			// rm fiilename
+			// rm filename
 			fs.unlinkSync(filename);
 		}
 	}
@@ -133,12 +133,27 @@ function compare() {
   });
 }
 
+function checkIcon() {
+  return new Promise(function(resolve, reject) {
+    fs.stat('./res/icon.png', function (err, stats1) {
+      fs.stat('./tests/out/icon.png', function (err, stats2) {
+        if (stats1.size === stats2.size) {
+          resolve();
+        } else {
+          reject('icon not copied properly');
+        }
+      });
+    });
+  });
+}
+
 suite('Lp builder', function() {
   test('build french locale identical to fixture', function(done) {
     verifyRevisions()
       .then(cleanup)
       .then(build)
       .then(compare)
+      .then(checkIcon)
       .then(function() {
       done();
     }).catch(function(e) {
