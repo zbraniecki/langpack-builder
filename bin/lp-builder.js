@@ -62,7 +62,7 @@ var version = program.lp_version || '1.0.0';
 
 var tasks = [];
 if (!program.source && !program.json) {
-  tasks = ['copy', 'optimize'];
+  tasks = ['copy', 'appmanifests', 'optimize'];
 } else {
   if (program.source) {
     tasks.push('copy');
