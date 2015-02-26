@@ -21,7 +21,7 @@ var config = {
   LP_RESULT_DIR: null,
   LP_VERSION: null,
   LP_APPS: null,
-  LP_TASKS: ['copy' ,'optimize'],
+  LP_TASKS: ['copy', 'appmanifests', 'optimize'],
 
   LOCALES: null,
   LOCALE_BASEDIR: null,

@@ -23,7 +23,7 @@ var config = {
   LP_RESULT_DIR: './tests/out',
   LP_VERSION: '1.0.0',
   LP_APPS: null,
-  LP_TASKS: ['copy' ,'optimize'],
+  LP_TASKS: ['copy', 'appmanifests', 'optimize'],
 
   LOCALES: ['fr'],
   LOCALE_BASEDIR: './tests/tmp/gaia-l10n/fr',
