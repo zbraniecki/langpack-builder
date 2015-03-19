@@ -21,7 +21,7 @@ var config = {
   LP_RESULT_DIR: null,
   LP_VERSION: null,
   LP_APPS: null,
-  LP_TASKS: ['copy' ,'optimize'],
+  LP_TASKS: ['copy', 'appmanifests', 'optimize'],
 
   LOCALES: null,
   LOCALE_BASEDIR: null,
@@ -62,7 +62,7 @@ var version = program.lp_version || '1.0.0';
 
 var tasks = [];
 if (!program.source && !program.json) {
-  tasks = ['copy', 'optimize'];
+  tasks = ['copy', 'appmanifests', 'optimize'];
 } else {
   if (program.source) {
     tasks.push('copy');
