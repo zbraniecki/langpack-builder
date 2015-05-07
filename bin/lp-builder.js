@@ -70,6 +70,7 @@ if (!program.source && !program.json) {
   if (program.json) {
     tasks.push('optimize');
   }
+  tasks.push('appmanifests');
 }
 
 if (!locale || !gaiaDir || program.args.length !== 1) {
