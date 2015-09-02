@@ -5,12 +5,10 @@ var mocha = require('gulp-mocha');
 var jshint = require('gulp-jshint');
 var stylish = require('jshint-stylish');
 
-var sourceGlob = './{bin,lib,tests}/**/*.js';
-
 gulp.task('default', ['lint', 'test']);
 
 gulp.task('lint', function() {
-    return gulp.src(sourceGlob)
+    return gulp.src(['./{bin,lib}/**/*.js', './tests/*.js'])
       .pipe(jshint())
       .pipe(jshint.reporter(stylish));
 });
