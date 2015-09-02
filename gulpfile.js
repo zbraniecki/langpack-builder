@@ -5,10 +5,12 @@ var mocha = require('gulp-mocha');
 var jshint = require('gulp-jshint');
 var stylish = require('jshint-stylish');
 
+var sources = ['./{bin,lib}/**/*.js', './tests/*.js'];
+
 gulp.task('default', ['lint', 'test']);
 
 gulp.task('lint', function() {
-    return gulp.src(['./{bin,lib}/**/*.js', './tests/*.js'])
+    return gulp.src(sources)
       .pipe(jshint())
       .pipe(jshint.reporter(stylish));
 });
@@ -19,5 +21,5 @@ gulp.task('test', function () {
 });
 
 gulp.task('watch', function() {
-    return gulp.watch(sourceGlob, ['test']);
+    return gulp.watch(sources, ['test']);
 });

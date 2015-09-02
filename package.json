@@ -4,7 +4,10 @@
   "description": "Langpack builder for Firefox OS",
   "main": "./lib/lp-builder/index.js",
   "bin": {
-    "langpack-builder": "lp-builder.js"
+    "langpack-builder": "./bin/lp-builder.js"
+  },
+  "engines" : {
+    "node" : ">=0.12"
   },
   "directories": {
     "lib": "./lib",
@@ -14,9 +17,7 @@
     "cheerio": "^0.18.0",
     "commander": "^2.5.0",
     "deep-equal": "^1.0.0",
-    "es6-set": "^0.1.1",
     "jsdom": "^1.4.1",
-    "promise": "^6.0.1",
     "wrench": "^1.5.8"
   },
   "devDependencies": {
@@ -27,12 +28,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/zbraniecki/langpack-builder.git"
+    "url": "https://github.com/l20n/langpack-builder.git"
   },
   "author": "Mozilla <l10n-drivers@mozilla.org>",
-  "license": "Apache 2.0",
+  "license": "Apache-2.0",
   "bugs": {
-    "url": "https://github.com/zbraniecki/langpack-builder/issues"
+    "url": "https://github.com/l20n/langpack-builder/issues"
   },
-  "homepage": "https://github.com/zbraniecki/langpack-builder"
+  "homepage": "https://github.com/l20n/langpack-builder"
 }

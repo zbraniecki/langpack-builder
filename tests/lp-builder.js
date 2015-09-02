@@ -83,22 +83,22 @@ function compareManifests(path1, path2) {
 }
 
 var rmdir = function(dir) {
-	var list = fs.readdirSync(dir);
-	for(var i = 0; i < list.length; i++) {
-		var filename = path.join(dir, list[i]);
-		var stat = fs.statSync(filename);
-		
-		if (filename === '.' || filename === '..') {
-			// pass these files
-		} else if (stat.isDirectory()) {
-			// rmdir recursively
-			rmdir(filename);
-		} else {
-			// rm filename
-			fs.unlinkSync(filename);
-		}
-	}
-	fs.rmdirSync(dir);
+  var list = fs.readdirSync(dir);
+  for (var i = 0; i < list.length; i++) {
+    var filename = path.join(dir, list[i]);
+    var stat = fs.statSync(filename);
+
+    if (filename !== '.' && filename !== '..') {
+      if (stat.isDirectory()) {
+        // rmdir recursively
+        rmdir(filename);
+      } else {
+        // rm filename
+        fs.unlinkSync(filename);
+      }
+    }
+  }
+  fs.rmdirSync(dir);
 };
 
 function cleanup() {
@@ -128,8 +128,8 @@ function compare() {
       function(error, stdout) {
         if (stdout.length === 0) {
           if (compareManifests(
-            './tests/out/manifest.webapp',
-            './tests/fixture/manifest.webapp')) {
+              './tests/out/manifest.webapp',
+              './tests/fixture/manifest.webapp')) {
             resolve();
           } else {
             reject('manifest mismatch');
