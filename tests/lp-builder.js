@@ -4,9 +4,7 @@
 var exec = require('child_process').exec;
 var fs = require('fs');
 var path = require('path');
-var Promise = require('promise');
 var deepEqual = require('deep-equal');
-var assert = require('assert');
 
 var LangpackBuilder = require('../lib/lp-builder').LangpackBuilder;
 
@@ -31,20 +29,22 @@ var config = {
 };
 
 function getGaiaRevision() {
-  return new Promise(function(resolve, reject) {
-    exec('cd ' + config.GAIA_DIR + ' && git rev-parse HEAD', function (error, stdout, stderr) {
-      var gaia_rev = stdout.trim();
-      resolve(gaia_rev);
-    });
+  return new Promise(function(resolve) {
+    exec('cd ' + config.GAIA_DIR + ' && git rev-parse HEAD',
+      function(error, stdout) {
+        var gaia_rev = stdout.trim();
+        resolve(gaia_rev);
+      });
   });
 }
 
 function getLocaleRevision() {
-  return new Promise(function(resolve, reject) {
-    exec('cd ' + config.LOCALE_BASEDIR + ' && hg id -i', function (error, stdout, stderr) {
-      var hg_rev = stdout.trim();
-      resolve(hg_rev);
-    });
+  return new Promise(function(resolve) {
+    exec('cd ' + config.LOCALE_BASEDIR + ' && hg id -i',
+      function (error, stdout) {
+        var hg_rev = stdout.trim();
+        resolve(hg_rev);
+      });
   });
 }
 
@@ -57,18 +57,22 @@ function verifyRevisions() {
   revs.push(getLocaleRevision());
 
   return Promise.all(revs).then(function(revs) {
-    if (revs[0] !== source['gaia_revision']) {
-      throw new Error("Gaia revision mismatch.\n " + config.GAIA_DIR + " should be in revision: " + source['gaia_revision']);
+    if (revs[0] !== source.gaia_revision) {
+      throw new Error(
+        'Gaia revision mismatch.\n ' + config.GAIA_DIR +
+        ' should be in revision: ' + source.gaia_revision);
     }
-    if (revs[1] !== source['fr_revision']) {
-      throw new Error("Locale revision mismatch\n " + config.LOCALE_BASEDIR + " should be in revision: " + source['fr_revision']);
+    if (revs[1] !== source.fr_revision) {
+      throw new Error(
+        'Locale revision mismatch\n ' + config.LOCALE_BASEDIR +
+        ' should be in revision: ' + source.fr_revision);
     }
   });
 }
 
 function compareManifests(path1, path2) {
-  var source1 = fs.readFileSync(path1, "utf8");
-  var source2 = fs.readFileSync(path2, "utf8");
+  var source1 = fs.readFileSync(path1, 'utf8');
+  var source2 = fs.readFileSync(path2, 'utf8');
 
   var man1 = JSON.parse(source1);
   var man2 = JSON.parse(source2);
@@ -84,9 +88,9 @@ var rmdir = function(dir) {
 		var filename = path.join(dir, list[i]);
 		var stat = fs.statSync(filename);
 		
-		if(filename == "." || filename == "..") {
+		if (filename === '.' || filename === '..') {
 			// pass these files
-		} else if(stat.isDirectory()) {
+		} else if (stat.isDirectory()) {
 			// rmdir recursively
 			rmdir(filename);
 		} else {
@@ -120,17 +124,20 @@ function build() {
 
 function compare() {
   return new Promise(function(resolve, reject) {
-    exec('diff -uNr ./tests/out/fr ./tests/fixture/fr', function (error, stdout, stderr) {
-      if (stdout.length === 0) {
-        if (compareManifests('./tests/out/manifest.webapp', './tests/fixture/manifest.webapp')) {
-          resolve();
+    exec('diff -uNr ./tests/out/fr ./tests/fixture/fr',
+      function(error, stdout) {
+        if (stdout.length === 0) {
+          if (compareManifests(
+            './tests/out/manifest.webapp',
+            './tests/fixture/manifest.webapp')) {
+            resolve();
+          } else {
+            reject('manifest mismatch');
+          }
         } else {
-          reject('manifest mismatch');
+          reject(stdout);
         }
-      } else {
-        reject(stdout);
-      }
-    });
+      });
   });
 }
 

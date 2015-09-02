@@ -3,8 +3,6 @@
 'use strict';
 
 var program = require('commander');
-var lpUtils = require('../lib/lp-builder/utils');
-var path = require('path');
 
 var LangpackBuilder = require('../lib/lp-builder').LangpackBuilder;
 
@@ -28,7 +26,8 @@ var config = {
   LOCALE_BASEDIR: null,
 };
 
-function buildLangpack(gaiaDir, localePath, resultPath, locale, appTasks, localeTasks, version) {
+function buildLangpack(
+  gaiaDir, localePath, resultPath, locale, appTasks, localeTasks, version) {
 
   config.GAIA_DIR = gaiaDir;
   config.LP_RESULT_DIR = resultPath;
@@ -79,7 +78,10 @@ if (!program.source && !program.json) {
 }
 
 if (!locale || !gaiaDir || program.args.length !== 1) {
-  console.log('Example: ./bin/lp-builder.js --gaia /path/to/gaia --locale ab-CD /path/to/gaia-l10n/ab-CD');
+  console.log(
+    'Example: ./bin/lp-builder.js --gaia /path/to/gaia --locale ab-CD ' +
+    '/path/to/gaia-l10n/ab-CD');
   return;
 }
-buildLangpack(gaiaDir, localePath, resultPath, locale, appTasks, localeTasks, version);
+buildLangpack(
+  gaiaDir, localePath, resultPath, locale, appTasks, localeTasks, version);
