@@ -158,8 +158,7 @@ exports.getResourcesFromHTMLFile = function(gaiaPath, appPath, htmlPath) {
         return [htmlPath, null, []];
       } else {
         return utils.getDocument(content).then(function($) {
-          return extractResourcesFromDocument(
-            gaiaPath, appPath, htmlPath, $, content);
+          return extractResourcesFromDocument(gaiaPath, appPath, htmlPath, $, content);
         });
       }
     });
